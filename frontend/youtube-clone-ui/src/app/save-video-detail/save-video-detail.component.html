@@ -49,21 +49,23 @@
               (change)="onFileSelected($event)">
           </div>
           <br />
-          <div>
-            <div>
-              <p>Selected File: </p>
+          <div *ngIf="fileUpload">
+            <div *ngIf="fileUpload">
+              <p>Selected File:{{selectedFileName}} </p>
             </div>
             <div>
-              <button mat-raised-button color="primary" type="submit">Upload</button>
+              <button mat-raised-button color="primary" type="submit" (click)="onUpload()">Upload</button>
             </div>
           </div>
           <br>
         </label>
       </div>
-      <button type="submit" mat-raised-button color="primary">Save</button>
+      <button type="submit" mat-raised-button color="primary" (click)="saveVideo()">Save</button>
     </form>
   </div>
-  <div fxFlex="30%">Video Player</div>
+  <div fxFlex="30%">
+    <app-video-player [videoUrl]="videoUrl"></app-video-player>
+  </div>
 
   <div fxFlex="20%">Hi</div>
 

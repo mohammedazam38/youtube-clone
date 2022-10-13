@@ -3,6 +3,10 @@ import {FormGroup} from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
+import { ActivatedRoute } from '@angular/router';
+import { VideoService } from '../video.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import { VideoDto } from '../video-dto';
 
 @Component({
   selector: 'app-save-video-detail',
@@ -15,10 +19,25 @@ title:FormControl= new FormControl('');
 description:FormControl= new FormControl('');
 videoStatus:FormControl= new FormControl('');
 addOnBlur = true;
+selectable=true;
+removable=true;
+
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   tags: string[] = [];
   selectedFile!:File;
-constructor() {
+  selectedFileName='';
+  videoId='';
+  fileUpload=false;
+  videoUrl!:string;
+  thumbNailUrl!:string;
+  
+constructor(private activatedRoute:ActivatedRoute,private VideoService:VideoService,
+  private matSnackBar:MatSnackBar) {
+  this.videoId=this.activatedRoute.snapshot.params.videoId;
+  this.VideoService.getVideoDetails(this.videoId).subscribe(data=>{
+    this.thumbNailUrl=data.thumbnailUrl;
+  this.videoUrl=data.videoUrl;
+  })
     this.saveVideoDetailsForm=new FormGroup({
       title:this.title,
       description:this.description,
@@ -49,10 +68,37 @@ constructor() {
     }
   }
   
-  onFileSelected(){
-
-
+  onFileSelected(event :Event ){
+    // @ts-ignore: Object is possibly 'null'
+this.selectedFile =event.target.files[0];
+this.selectedFileName=this.selectedFile.name;
+this.fileUpload=true;
   }
+  onUpload(){
+    
+   this.VideoService.uploadThumbnail(this.selectedFile,this.videoId)
+   .subscribe(data=>{
+    //show a upload success notification
+    this.matSnackBar.open("Thumbnail upload successfull","ok");
+    
+   })
   
+  }
+  saveVideo(){
+    const videoMetaData:VideoDto={
+      "id":this.videoId,
+      "title":this.saveVideoDetailsForm.get('title')?.value,
+      "description":this.saveVideoDetailsForm.get('description')?.value,
+      "tags":this.tags,
+      "status":this.saveVideoDetailsForm.get('videoStatus')?.value,
+      "videoUrl":this.videoUrl,
+      "thumbnailUrl":this.thumbNailUrl
+    }
+   
+    this.VideoService.saveVideo(videoMetaData).subscribe(data=>{
+      this.matSnackBar.open("Video details updated successfully","OK");
+    })
+   
+  }
 
 }
