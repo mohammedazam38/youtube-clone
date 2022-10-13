@@ -20,6 +20,7 @@ login(){
       this.oidcSecurityService.authorize();
 }
  logout() {
+  this.isAuthenticated=false;
     this.oidcSecurityService.logoffAndRevokeTokens();
   }
 
