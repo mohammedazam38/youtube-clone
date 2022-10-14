@@ -20,7 +20,7 @@ public class VideoService {
 
    private final VideoRepo videoRepo;
     private Logger log= LoggerFactory.getLogger(getClass());
-
+private final UserService userService;
 
     public UploadVideoResponse uploadVideo(MultipartFile file){
    String videoUrl= s3Service.uploadFile(file);
@@ -64,5 +64,82 @@ videoRepo.save(video);
         videoDto.setDescription(videoDetail.getDescription());
         videoDto.setTitle(videoDetail.getTitle());
         return videoDto;
+    }
+
+    public VideoDto likeVideo(String videoId) {
+       //Increment like count
+        //If user already likes the video, then decrement like
+        //like-0 dislike -0
+        //like-1 dislike-0
+        //like -0 dislike-1
+        Video videoDetail=findVideo(videoId);
+        if(userService.ifLikedVideoPresnet(videoId)){
+            videoDetail.decrementLike();
+            userService.removeFromLikedVideo(videoId);
+        }
+        else if(userService.ifDislikedVideoPresent(videoId)){
+            videoDetail.decrementDislike();
+   userService.removeFromDisliked(videoId);
+            videoDetail.incrementLike();
+   userService.addToLikedVideo(videoId);
+
+
+
+        }else{
+            videoDetail.incrementLike();
+            userService.addToLikedVideo(videoId);
+        }
+        videoRepo.save(videoDetail);
+
+        VideoDto videoDto= new VideoDto();
+        videoDto.setVideoUrl(videoDetail.getVideourl());
+        videoDto.setThumbnailUrl(videoDetail.getThumbnailUrl());
+        videoDto.setTags(videoDetail.getTags());
+        videoDto.setId(videoDetail.getId());
+        videoDto.setDescription(videoDetail.getDescription());
+        videoDto.setTitle(videoDetail.getTitle());
+        videoDto.setLikeCount(videoDetail.getLikes().get());
+        videoDto.setDisLikeCount(videoDetail.getDisLikes().get());
+
+        return videoDto ;
+
+
+
+
+    }
+
+    public VideoDto dislikeVideo(String videoId) {
+        Video videoDetail=findVideo(videoId);
+
+         if(userService.ifDislikedVideoPresent(videoId)){
+            videoDetail.decrementDislike();
+            userService.removeFromDisliked(videoId);
+        }else if(userService.ifLikedVideoPresnet(videoId)){
+             videoDetail.decrementLike();
+             userService.removeFromLikedVideo(videoId);
+             videoDetail.incrementDislike();
+             userService.addToDisliked(videoId);
+         }
+         else{
+            videoDetail.incrementDislike();
+            userService.addToDisliked(videoId);
+        }
+        videoRepo.save(videoDetail);
+
+        VideoDto videoDto= new VideoDto();
+        videoDto.setVideoUrl(videoDetail.getVideourl());
+        videoDto.setThumbnailUrl(videoDetail.getThumbnailUrl());
+        videoDto.setTags(videoDetail.getTags());
+        videoDto.setId(videoDetail.getId());
+        videoDto.setDescription(videoDetail.getDescription());
+        videoDto.setTitle(videoDetail.getTitle());
+        videoDto.setLikeCount(videoDetail.getLikes().get());
+        videoDto.setDisLikeCount(videoDetail.getDisLikes().get());
+
+        return videoDto ;
+
+
+
+
     }
 }
