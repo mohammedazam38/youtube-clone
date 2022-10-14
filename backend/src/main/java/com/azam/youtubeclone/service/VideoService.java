@@ -112,7 +112,10 @@ videoRepo.save(video);
         Video videoDetail=findVideo(videoId);
 
          if(userService.ifDislikedVideoPresent(videoId)){
-            videoDetail.decrementDislike();
+             log.info("Before ",String.valueOf(videoDetail.getDisLikes().get()));
+
+             videoDetail.decrementDislike();
+            log.info("After ",String.valueOf(videoDetail.getDisLikes().get()));
             userService.removeFromDisliked(videoId);
         }else if(userService.ifLikedVideoPresnet(videoId)){
              videoDetail.decrementLike();
