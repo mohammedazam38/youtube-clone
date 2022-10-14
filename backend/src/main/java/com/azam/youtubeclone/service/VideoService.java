@@ -1,8 +1,10 @@
 package com.azam.youtubeclone.service;
 
 
+import com.azam.youtubeclone.dto.CommentDto;
 import com.azam.youtubeclone.dto.UploadVideoResponse;
 import com.azam.youtubeclone.dto.VideoDto;
+import com.azam.youtubeclone.model.Comment;
 import com.azam.youtubeclone.model.Video;
 import com.azam.youtubeclone.repo.VideoRepo;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 
 
 @Service
@@ -56,6 +59,12 @@ videoRepo.save(video);
 
     public VideoDto getVideoDetails(String videoId) {
         Video videoDetail=findVideo(videoId);
+        increaseVideoCount(videoDetail);
+        userService.addVideoHistory(videoId);
+
+        return mapToVideoDto(videoDetail);
+    }
+    public VideoDto mapToVideoDto(Video videoDetail){
         VideoDto videoDto= new VideoDto();
         videoDto.setVideoUrl(videoDetail.getVideourl());
         videoDto.setThumbnailUrl(videoDetail.getThumbnailUrl());
@@ -63,8 +72,17 @@ videoRepo.save(video);
         videoDto.setId(videoDetail.getId());
         videoDto.setDescription(videoDetail.getDescription());
         videoDto.setTitle(videoDetail.getTitle());
+        videoDto.setLikeCount(videoDetail.getLikes().get());
+        videoDto.setDisLikeCount(videoDetail.getDisLikes().get());
+        videoDto.setViewCount(videoDetail.getViewCount().get());
         return videoDto;
     }
+
+    private void increaseVideoCount(Video videoDetail) {
+        videoDetail.increaseViewCount();
+        videoRepo.save(videoDetail);
+    }
+
 
     public VideoDto likeVideo(String videoId) {
        //Increment like count
@@ -91,17 +109,9 @@ videoRepo.save(video);
         }
         videoRepo.save(videoDetail);
 
-        VideoDto videoDto= new VideoDto();
-        videoDto.setVideoUrl(videoDetail.getVideourl());
-        videoDto.setThumbnailUrl(videoDetail.getThumbnailUrl());
-        videoDto.setTags(videoDetail.getTags());
-        videoDto.setId(videoDetail.getId());
-        videoDto.setDescription(videoDetail.getDescription());
-        videoDto.setTitle(videoDetail.getTitle());
-        videoDto.setLikeCount(videoDetail.getLikes().get());
-        videoDto.setDisLikeCount(videoDetail.getDisLikes().get());
 
-        return videoDto ;
+
+        return mapToVideoDto(videoDetail) ;
 
 
 
@@ -129,20 +139,37 @@ videoRepo.save(video);
         }
         videoRepo.save(videoDetail);
 
-        VideoDto videoDto= new VideoDto();
-        videoDto.setVideoUrl(videoDetail.getVideourl());
-        videoDto.setThumbnailUrl(videoDetail.getThumbnailUrl());
-        videoDto.setTags(videoDetail.getTags());
-        videoDto.setId(videoDetail.getId());
-        videoDto.setDescription(videoDetail.getDescription());
-        videoDto.setTitle(videoDetail.getTitle());
-        videoDto.setLikeCount(videoDetail.getLikes().get());
-        videoDto.setDisLikeCount(videoDetail.getDisLikes().get());
 
-        return videoDto ;
+        return mapToVideoDto(videoDetail) ;
 
 
 
 
+    }
+
+    public void addComment(String videoId, CommentDto commentDto) {
+        Video video= findVideo(videoId);
+        Comment comment= new Comment();
+        comment.setId(commentDto.getAuthorId());
+        comment.setText(commentDto.getCommentText());
+        video.addComment(comment);
+        videoRepo.save(video);
+    }
+
+    public List<CommentDto> getAllCommentsById(String videoId) {
+        Video video= findVideo(videoId);
+        List<Comment> list= video.getCommentList();
+         return list.stream().map(this::mapToCommentDto).toList();
+    }
+
+    private CommentDto mapToCommentDto(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setCommentText(commentDto.getCommentText());
+        commentDto.setAuthorId(commentDto.getAuthorId());
+        return commentDto;
+    }
+
+    public List<VideoDto> getAllVideos() {
+        return videoRepo.findAll().stream().map(this::mapToVideoDto).toList();
     }
 }

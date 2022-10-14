@@ -1,5 +1,6 @@
 package com.azam.youtubeclone.controller;
 
+import com.azam.youtubeclone.dto.CommentDto;
 import com.azam.youtubeclone.dto.UploadVideoResponse;
 import com.azam.youtubeclone.dto.VideoDto;
 import com.azam.youtubeclone.service.VideoService;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/videos")
@@ -61,4 +64,22 @@ public class VideoController {
     public VideoDto dislikeVideo(@PathVariable String videoId){
         return videoService.dislikeVideo(videoId);
     }
+
+    @PostMapping("/{videoId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    public  void addComment(@PathVariable String videoId, @RequestBody CommentDto commentDto){
+       videoService.addComment(videoId,commentDto);
+    }
+    @GetMapping("/{videoId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CommentDto> getAllComments(String videoId){
+        return videoService.getAllCommentsById(videoId);
+    }
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public List<VideoDto> getAllVideos(){
+        return videoService.getAllVideos();
+    }
+
+
 }

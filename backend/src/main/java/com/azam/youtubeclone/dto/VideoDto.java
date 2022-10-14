@@ -22,4 +22,5 @@ public class VideoDto {
     private String videoUrl;
     private Integer likeCount;
     private Integer disLikeCount;
+    private Integer viewCount;
 }

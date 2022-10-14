@@ -30,6 +30,16 @@ import { VideoPlayerComponent } from './video-player/video-player.component';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { AuthInterceptor } from 'angular-auth-oidc-client';
 import { VideoDetailsComponent } from './video-details/video-details.component';
+import { HomeComponent } from './home/home.component';
+import { HistoryComponent } from './history/history.component';
+import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
+import { LikedVideosComponent } from './liked-videos/liked-videos.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
+import { FeaturesComponent } from './features/features.component';
+import { VideoCardComponent } from './video-card/video-card.component';
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -38,7 +48,14 @@ import { VideoDetailsComponent } from './video-details/video-details.component';
     HeaderComponent,
     SaveVideoDetailComponent,
     VideoPlayerComponent,
-    VideoDetailsComponent
+    VideoDetailsComponent,
+    HomeComponent,
+    HistoryComponent,
+    SubscriptionsComponent,
+    LikedVideosComponent,
+    SidebarComponent,
+    FeaturesComponent,
+    VideoCardComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +79,10 @@ import { VideoDetailsComponent } from './video-details/video-details.component';
         VgOverlayPlayModule,
         VgBufferingModule,
         MatSnackBarModule,
-        AuthConfigModule
+        AuthConfigModule,
+        MatSidenavModule,
+        MatListModule,
+        MatCardModule
 
 
   ],
