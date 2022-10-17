@@ -72,13 +72,18 @@ public class VideoController {
     }
     @GetMapping("/{videoId}/comment")
     @ResponseStatus(HttpStatus.OK)
-    public List<CommentDto> getAllComments(String videoId){
-        return videoService.getAllCommentsById(videoId);
+    public List<CommentDto> getAllComments(@PathVariable String videoId){
+        log.info("video Id is ",videoId);
+        List<CommentDto> list= videoService.getAllCommentsById(videoId);
+
+        return list;
     }
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<VideoDto> getAllVideos(){
-        return videoService.getAllVideos();
+        List<VideoDto> list= videoService.getAllVideos();
+
+        return list;
     }
 
 

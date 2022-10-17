@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { VideoDto } from '../video-dto';
+import { VideoService } from '../video.service';
 
 @Component({
   selector: 'app-features',
@@ -6,10 +8,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./features.component.css']
 })
 export class FeaturesComponent implements OnInit {
+featuredVideos:Array<VideoDto>=[];
 
-  constructor() { }
-
+  constructor(private videoService:VideoService) { }
   ngOnInit(): void {
+    this.videoService.getAllVideos().subscribe(response=>{
+      this.featuredVideos=response;
+      
+    })
+    
   }
+
 
 }

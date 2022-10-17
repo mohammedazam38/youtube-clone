@@ -8,7 +8,12 @@ import { SubscriptionsComponent } from './subscriptions/subscriptions.component'
 import { HistoryComponent } from './history/history.component';
 import { LikedVideosComponent } from './liked-videos/liked-videos.component';
 import { FeaturesComponent } from './features/features.component';
+import { CallbackComponent } from './callback/callback.component';
 const routes: Routes = [
+  {
+path:'callback',component:CallbackComponent,
+
+},
 {
 path:'upload-video',component:UploadVideoComponent,
 

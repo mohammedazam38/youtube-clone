@@ -1,3 +1,12 @@
 .example-spacer {
   flex: 1 1 auto;
 }
+.image{
+  padding-right: 3px;
+    display: flex;
+    height: 60px;
+    width: 200px;
+}
+.header-color{
+  background-color: black;
+}

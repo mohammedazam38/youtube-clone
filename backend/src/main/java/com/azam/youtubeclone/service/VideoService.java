@@ -29,15 +29,23 @@ private final UserService userService;
    String videoUrl= s3Service.uploadFile(file);
    var video= new Video();
    video.setVideourl(videoUrl);
-videoRepo.save(video);
- return new UploadVideoResponse(video.getId(),videoUrl);
+var savedVideo=videoRepo.save(video);
+log.info("saved video thumbnail"+savedVideo.getThumbnailUrl());
+ return new UploadVideoResponse(savedVideo.getId(),savedVideo.getVideourl());
+    }
+    public String uploadThumbnail(MultipartFile file,String videoId) {
+        var savedVideo=findVideo(videoId);
+        String thumbNail=s3Service.uploadFile(file);
+        savedVideo.setThumbnailUrl(thumbNail);
+        videoRepo.save(savedVideo);
+        return thumbNail;
     }
 
     public VideoDto editVideo(VideoDto videoDto) {
         //Find the video by Id
         //Map videoDto to video
 
-        Video savedVideo= findVideo(videoDto.getId());
+        var savedVideo= findVideo(videoDto.getId());
         savedVideo.setThumbnailUrl(videoDto.getThumbnailUrl());;
         savedVideo.setTitle(videoDto.getTitle());
         savedVideo.setDescription(videoDto.getDescription());
@@ -47,15 +55,10 @@ videoRepo.save(video);
  return videoDto;
     }
    public Video findVideo(String id){
+
         return videoRepo.findById(id).orElseThrow(()->new IllegalArgumentException("Can not find vide  by id"+id));
    }
-    public String uploadThumbnail(MultipartFile file,String videoId) {
-      Video savedVideo=findVideo(videoId);
-      String thumbNail=s3Service.uploadFile(file);
-      savedVideo.setThumbnailUrl(thumbNail);
-      videoRepo.save(savedVideo);
-      return thumbNail;
-    }
+
 
     public VideoDto getVideoDetails(String videoId) {
         Video videoDetail=findVideo(videoId);
@@ -159,17 +162,24 @@ videoRepo.save(video);
     public List<CommentDto> getAllCommentsById(String videoId) {
         Video video= findVideo(videoId);
         List<Comment> list= video.getCommentList();
+
+
          return list.stream().map(this::mapToCommentDto).toList();
     }
 
     private CommentDto mapToCommentDto(Comment comment) {
         CommentDto commentDto = new CommentDto();
-        commentDto.setCommentText(commentDto.getCommentText());
-        commentDto.setAuthorId(commentDto.getAuthorId());
+        commentDto.setCommentText(comment.getText());
+        commentDto.setAuthorId(comment.getAuthor());
         return commentDto;
     }
 
     public List<VideoDto> getAllVideos() {
-        return videoRepo.findAll().stream().map(this::mapToVideoDto).toList();
+
+        List<VideoDto> video= videoRepo.findAll().stream().map(this::mapToVideoDto).toList();
+        for(int i=0;i<video.size();i++){
+            log.info("element is "+video.get(i).getThumbnailUrl());
+        }
+        return video;
     }
 }

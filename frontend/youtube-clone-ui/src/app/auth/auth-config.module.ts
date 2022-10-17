@@ -6,7 +6,7 @@ import { AuthModule } from 'angular-auth-oidc-client';
     imports: [AuthModule.forRoot({
         config: {
             authority: 'https://dev-solml3pe.us.auth0.com',
-            redirectUrl:"http://localhost:4200",
+            redirectUrl:"http://localhost:4200/callback",
             clientId: 'IcIqPdTkDgXsCwgveTRZd7qEbHecvg0o',
             scope: 'openid profile offline_access email',
             responseType: 'code',

@@ -1,24 +1,32 @@
-<p>
-  <mat-toolbar color="primary">
+<mat-toolbar color="header-color">
 
 
-    <mat-toolbar-row>
-      <span>Youtube clone</span>
-      <span class="example-spacer"></span>
-      <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-        <mat-icon>video_call</mat-icon>
-      </button>
-      <button *ngIf="isAuthenticated; else noAuth" mat-icon-button class="example-icon"
-        aria-label="Example icon-button with share icon">
-        <mat-icon>account_circle</mat-icon>
-      </button>
+  <mat-toolbar-row>
 
-      <ng-template #noAuth>
-        <button mat-raised-button (click)="login()">Login</button>
-      </ng-template>
 
-      <button mat-raised-button (click)="logout()">Logof</button>
+    <span routerLink="" class="image">
+      <img [src]="'https://www.trustedreviews.com/wp-content/uploads/sites/54/2022/01/youtube_logo_dark-920x460.jpg'"
+        alt="Youtube">
+      <p matLine>Youtube Clone</p>
+    </span>
 
-    </mat-toolbar-row>
-  </mat-toolbar>
-</p>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon" routerLink="/upload-video"
+      aria-label="Example icon-button with heart icon">
+
+      <mat-icon>video_call</mat-icon>
+    </button>
+    <button *ngIf="isAuthenticated; else noAuth" [matMenuTriggerFor]="menu" mat-icon-button class="example-icon"
+      aria-label="Example icon-button with share icon">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+    <ng-template #noAuth>
+      <button mat-raised-button (click)="login()">Login</button>
+    </ng-template>
+
+
+  </mat-toolbar-row>
+</mat-toolbar>

@@ -29,14 +29,18 @@ removable=true;
   videoId='';
   fileUpload=false;
   videoUrl!:string;
-  thumbNailUrl!:string;
+  thumbnailUrl!:string;
+  likeCount:number=0;
+      disLikeCount:number=0;
+            viewCount:number=0;
+
   
 constructor(private activatedRoute:ActivatedRoute,private VideoService:VideoService,
   private matSnackBar:MatSnackBar) {
   this.videoId=this.activatedRoute.snapshot.params.videoId;
   this.VideoService.getVideoDetails(this.videoId).subscribe(data=>{
-    this.thumbNailUrl=data.thumbnailUrl;
-  this.videoUrl=data.videoUrl;
+    this.thumbnailUrl=data.thumbnailUrl;
+      this.videoUrl=data.videoUrl;
   })
     this.saveVideoDetailsForm=new FormGroup({
       title:this.title,
@@ -92,7 +96,11 @@ this.fileUpload=true;
       "tags":this.tags,
       "status":this.saveVideoDetailsForm.get('videoStatus')?.value,
       "videoUrl":this.videoUrl,
-      "thumbnailUrl":this.thumbNailUrl
+      "thumbnailUrl":this.thumbnailUrl,
+      "likeCount":this.likeCount,
+      "disLikeCount":this.disLikeCount,
+      "viewCount":this.viewCount
+
     }
    
     this.VideoService.saveVideo(videoMetaData).subscribe(data=>{

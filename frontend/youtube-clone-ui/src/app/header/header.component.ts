@@ -22,6 +22,7 @@ login(){
  logout() {
   this.isAuthenticated=false;
     this.oidcSecurityService.logoffAndRevokeTokens();
+    this.oidcSecurityService.logoffLocal();
   }
 
 }
