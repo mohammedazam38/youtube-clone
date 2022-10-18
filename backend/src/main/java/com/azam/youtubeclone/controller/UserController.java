@@ -1,7 +1,9 @@
 package com.azam.youtubeclone.controller;
 
+import com.azam.youtubeclone.dto.VideoDto;
 import com.azam.youtubeclone.service.UserRegService;
 import com.azam.youtubeclone.service.UserService;
+import com.azam.youtubeclone.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,8 @@ public class UserController {
 
   private final UserRegService userRegService;
   private final UserService userService;
+  private  final VideoService videoService;
+
     @GetMapping("/register")
     @ResponseStatus(HttpStatus.OK)
 
@@ -53,5 +57,12 @@ public class UserController {
     }
 
 
+    @GetMapping("/subscriptions/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Set<VideoDto> getSubscriptionVideos(@PathVariable String userId) {
+        log.info("user id",userId);
+        Set<VideoDto> list = videoService.getSubscriptionVideos(userId);
+        return list;
+    }
 
 }

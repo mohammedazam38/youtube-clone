@@ -5,6 +5,7 @@ import com.azam.youtubeclone.dto.CommentDto;
 import com.azam.youtubeclone.dto.UploadVideoResponse;
 import com.azam.youtubeclone.dto.VideoDto;
 import com.azam.youtubeclone.model.Comment;
+import com.azam.youtubeclone.model.User;
 import com.azam.youtubeclone.model.Video;
 import com.azam.youtubeclone.repo.VideoRepo;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -30,7 +33,6 @@ private final UserService userService;
    var video= new Video();
    video.setVideourl(videoUrl);
 var savedVideo=videoRepo.save(video);
-log.info("saved video thumbnail"+savedVideo.getThumbnailUrl());
  return new UploadVideoResponse(savedVideo.getId(),savedVideo.getVideourl());
     }
     public String uploadThumbnail(MultipartFile file,String videoId) {
@@ -177,9 +179,32 @@ log.info("saved video thumbnail"+savedVideo.getThumbnailUrl());
     public List<VideoDto> getAllVideos() {
 
         List<VideoDto> video= videoRepo.findAll().stream().map(this::mapToVideoDto).toList();
-        for(int i=0;i<video.size();i++){
-            log.info("element is "+video.get(i).getThumbnailUrl());
-        }
+
         return video;
     }
+
+    public VideoDto getAllVideosById(String id) {
+
+            Video v= videoRepo.findById(id).orElseThrow(()->new IllegalArgumentException("Can not find video  by id"+id));
+
+
+        return mapToVideoDto(v);
+    }
+    public Set<VideoDto> getSubscriptionVideos(String userId) {
+
+        User user=userService.getCurrentUser();
+        Set<String> listOFUsers=user.getSubscribedToUsers();
+        Set<VideoDto> subscribedTo= new HashSet<>();
+        for(String id:listOFUsers){
+            VideoDto videoDto= new VideoDto();
+            videoDto=getAllVideosById(id);
+            subscribedTo.add(videoDto);
+
+        }
+        return subscribedTo;
+
+    }
+
+
+
 }

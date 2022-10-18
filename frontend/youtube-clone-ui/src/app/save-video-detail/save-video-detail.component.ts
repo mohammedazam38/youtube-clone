@@ -39,7 +39,7 @@ constructor(private activatedRoute:ActivatedRoute,private VideoService:VideoServ
   private matSnackBar:MatSnackBar) {
   this.videoId=this.activatedRoute.snapshot.params.videoId;
   this.VideoService.getVideoDetails(this.videoId).subscribe(data=>{
-    this.thumbnailUrl=data.thumbnailUrl;
+    
       this.videoUrl=data.videoUrl;
   })
     this.saveVideoDetailsForm=new FormGroup({
@@ -83,6 +83,7 @@ this.fileUpload=true;
    this.VideoService.uploadThumbnail(this.selectedFile,this.videoId)
    .subscribe(data=>{
     //show a upload success notification
+    this.thumbnailUrl=data;
     this.matSnackBar.open("Thumbnail upload successfull","ok");
     
    })
@@ -102,6 +103,7 @@ this.fileUpload=true;
       "viewCount":this.viewCount
 
     }
+    console.log("thumb nail url is"+this.thumbnailUrl);
    
     this.VideoService.saveVideo(videoMetaData).subscribe(data=>{
       this.matSnackBar.open("Video details updated successfully","OK");

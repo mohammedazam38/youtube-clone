@@ -22,7 +22,7 @@ public class VideoController {
 
     private final VideoService videoService;
 
-    private Logger log= LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -33,13 +33,13 @@ public class VideoController {
 
     @PostMapping("/thumbnail")
     @ResponseStatus(HttpStatus.CREATED)
-    public String uploadThumbnail(@RequestParam("file") MultipartFile file,@RequestParam("videoId") String videoId) {
-       return videoService.uploadThumbnail(file,videoId);
+    public String uploadThumbnail(@RequestParam("file") MultipartFile file, @RequestParam("videoId") String videoId) {
+        return videoService.uploadThumbnail(file, videoId);
     }
 
     @GetMapping("/{videoId}")
     @ResponseStatus(HttpStatus.OK)
-    public VideoDto getVideoDetails(@PathVariable String videoId){
+    public VideoDto getVideoDetails(@PathVariable String videoId) {
 
 
         return videoService.getVideoDetails(videoId);
@@ -47,41 +47,43 @@ public class VideoController {
 
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
-    public VideoDto editVideoMetadata(@RequestBody VideoDto videoDto){
+    public VideoDto editVideoMetadata(@RequestBody VideoDto videoDto) {
 
-    videoService.editVideo(videoDto);
-    return videoDto;
+        videoService.editVideo(videoDto);
+        return videoDto;
     }
 
     @PostMapping("/{videoId}/like")
     @ResponseStatus(HttpStatus.OK)
-    public VideoDto likeVideo(@PathVariable String videoId){
+    public VideoDto likeVideo(@PathVariable String videoId) {
         return videoService.likeVideo(videoId);
     }
 
     @PostMapping("/{videoId}/dislike")
     @ResponseStatus(HttpStatus.OK)
-    public VideoDto dislikeVideo(@PathVariable String videoId){
+    public VideoDto dislikeVideo(@PathVariable String videoId) {
         return videoService.dislikeVideo(videoId);
     }
 
     @PostMapping("/{videoId}/comment")
     @ResponseStatus(HttpStatus.OK)
-    public  void addComment(@PathVariable String videoId, @RequestBody CommentDto commentDto){
-       videoService.addComment(videoId,commentDto);
+    public void addComment(@PathVariable String videoId, @RequestBody CommentDto commentDto) {
+        videoService.addComment(videoId, commentDto);
     }
+
     @GetMapping("/{videoId}/comment")
     @ResponseStatus(HttpStatus.OK)
-    public List<CommentDto> getAllComments(@PathVariable String videoId){
-        log.info("video Id is ",videoId);
-        List<CommentDto> list= videoService.getAllCommentsById(videoId);
+    public List<CommentDto> getAllComments(@PathVariable String videoId) {
+        log.info("video Id is ", videoId);
+        List<CommentDto> list = videoService.getAllCommentsById(videoId);
 
         return list;
     }
+
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<VideoDto> getAllVideos(){
-        List<VideoDto> list= videoService.getAllVideos();
+    public List<VideoDto> getAllVideos() {
+        List<VideoDto> list = videoService.getAllVideos();
 
         return list;
     }

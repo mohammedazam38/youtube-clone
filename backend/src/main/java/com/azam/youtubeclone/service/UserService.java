@@ -16,7 +16,6 @@ public class UserService {
 
 
 
-
     public User getCurrentUser() {
         //get the current user by using the sub from the OAuth2
        String sub= ((Jwt)(SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getClaim("sub");
@@ -92,4 +91,6 @@ public class UserService {
        return
                user.getVideoHistory();
     }
+
+
 }

@@ -1,6 +1,7 @@
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { stringToKeyValue } from '@angular/flex-layout/extended/style/style-transforms';
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -22,12 +23,18 @@ export class UserService {
   registerUser(){
      this.httpClient.get("http://localhost:8080/api/user/register",{responseType: 'text'}).subscribe(data=>{
       this.userid=data;
-        console.log('User id is'+this.userid);
-
+  console.log("user id is"+this.userid);
      });
+
      
   }
   getUserId(){
       return this.userid;
      }
+     getAllVideos(userId:string):Observable<any>{
+     
+       console.log("user id"+userId);
+      return this.httpClient.get("http://localhost:8080/api/user/subscriptions/"+userId);
+     }
+
 }

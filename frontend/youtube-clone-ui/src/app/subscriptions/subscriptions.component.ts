@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../user.service';
+import { VideoDto } from '../video-dto';
+import { VideoService } from '../video.service';
 
 @Component({
   selector: 'app-subscriptions',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SubscriptionsComponent implements OnInit {
 
-  constructor() { }
-
+   subscribedVideos:Array<VideoDto>=[];
+  constructor(private userService:UserService) { }
   ngOnInit(): void {
+  
+      let userId=this.userService.getUserId();
+ this.userService.getAllVideos(userId).subscribe(response=>{
+      this.subscribedVideos=response;
+    })
+   
+    
   }
-
+    
+    
 }
+

@@ -6,7 +6,9 @@
     display: flex;
     height: 60px;
     width: 200px;
+    margin-left: 50px;
 }
 .header-color{
-  background-color: black;
+      background: rgb(0 0 0);
+        color: #e0e0e0;
 }
